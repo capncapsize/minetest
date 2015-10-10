@@ -67,6 +67,9 @@ u32 getTime(TimePrecision prec) {
 
 ClientLauncher::~ClientLauncher()
 {
+	errorstream << "------------------------------------------------------------------" <<
+		"clientlauncher.cpp -> ~CalientLauncher [STOP]" << std::endl;
+
 	if (receiver)
 		delete receiver;
 
@@ -83,6 +86,8 @@ ClientLauncher::~ClientLauncher()
 
 bool ClientLauncher::run(GameParams &game_params, const Settings &cmd_args)
 {
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::run [START]" << std::endl;
 	init_args(game_params, cmd_args);
 
 	// List video modes if requested
@@ -179,7 +184,8 @@ bool ClientLauncher::run(GameParams &game_params, const Settings &cmd_args)
 	*/
 	bool retval = true;
 	bool *kill = porting::signal_handler_killstatus();
-
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::run [ENTER] main-menu loop" << std::endl;
 	while (device->run() && !*kill && !g_gamecallback->shutdown_requested)
 	{
 		// Set the window caption
@@ -197,7 +203,8 @@ bool ClientLauncher::run(GameParams &game_params, const Settings &cmd_args)
 				Otherwise they won't be automatically drawn.
 			*/
 			guiroot = guienv->addStaticText(L"", core::rect<s32>(0, 0, 10000, 10000));
-
+			errorstream << "------------------------------------------------------------------" <<
+					"clientlauncher.cpp -> ClientLauncher::run [CALLING] ClientLauncher::launch_game" << std::endl;
 			bool game_has_run = launch_game(error_message, reconnect_requested,
 				game_params, cmd_args);
 
@@ -235,7 +242,8 @@ bool ClientLauncher::run(GameParams &game_params, const Settings &cmd_args)
 			receiver->m_touchscreengui = new TouchScreenGUI(device, receiver);
 			g_touchscreengui = receiver->m_touchscreengui;
 #endif
-
+			errorstream << "------------------------------------------------------------------" <<
+						"clientlauncher.cpp -> ClientLauncher::run [CALL] the_game" << std::endl;
 			the_game(
 				kill,
 				random_input,
@@ -288,7 +296,8 @@ bool ClientLauncher::run(GameParams &game_params, const Settings &cmd_args)
 
 	g_menuclouds->drop();
 	g_menucloudsmgr->drop();
-
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::run [RETURN]" << std::endl;
 	return retval;
 }
 
@@ -332,6 +341,8 @@ bool ClientLauncher::launch_game(std::string &error_message,
 		bool reconnect_requested, GameParams &game_params,
 		const Settings &cmd_args)
 {
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::launch_game [START]" << std::endl;
 	// Initialize menu data
 	MainMenuData menudata;
 	menudata.address                         = address;
@@ -362,6 +373,8 @@ bool ClientLauncher::launch_game(std::string &error_message,
 	/* Show the GUI menu
 	 */
 	if (!skip_main_menu) {
+		errorstream << "------------------------------------------------------------------" <<
+				"clientlauncher.cpp -> ClientLauncher::launch_game [CALLING] ClientLauncher::main_menu" << std::endl;
 		main_menu(&menudata);
 
 		// Skip further loading if there was an exit signal.
@@ -385,6 +398,7 @@ bool ClientLauncher::launch_game(std::string &error_message,
 		}
 	}
 
+
 	if (!menudata.script_data.errormessage.empty()) {
 		/* The calling function will pass this back into this function upon the
 		 * next iteration (if any) causing it to be displayed by the GUI
@@ -392,6 +406,7 @@ bool ClientLauncher::launch_game(std::string &error_message,
 		error_message = menudata.script_data.errormessage;
 		return false;
 	}
+
 
 	if (menudata.name == "")
 		menudata.name = std::string("Guest") + itos(myrand_range(1000, 9999));
@@ -468,12 +483,16 @@ bool ClientLauncher::launch_game(std::string &error_message,
 			return false;
 		}
 	}
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::launch_game [RETURN]" << std::endl;
 
 	return true;
 }
 
 void ClientLauncher::main_menu(MainMenuData *menudata)
 {
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::main_menu [START]" << std::endl;
 	bool *kill = porting::signal_handler_killstatus();
 	video::IVideoDriver *driver = device->getVideoDriver();
 
@@ -493,11 +512,15 @@ void ClientLauncher::main_menu(MainMenuData *menudata)
 #ifndef ANDROID
 	device->getCursorControl()->setVisible(true);
 #endif
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::main_menu [CALLING] GUIEngine" << std::endl;
 
 	/* show main menu */
 	GUIEngine mymenu(device, guiroot, &g_menumgr, smgr, menudata, *kill);
 
 	smgr->clear();	/* leave scene manager in a clean state */
+	errorstream << "------------------------------------------------------------------" <<
+			"clientlauncher.cpp -> ClientLauncher::main_menu [RETURN]" << std::endl;
 }
 
 bool ClientLauncher::create_engine_device(int log_level)
