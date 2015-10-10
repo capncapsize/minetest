@@ -153,6 +153,8 @@ GUIEngine::GUIEngine(	irr::IrrlichtDevice* dev,
 	m_clouds_enabled(true),
 	m_cloud()
 {
+	errorstream << "------------------------------------------------------------------" <<
+						"guiEngine.cpp -> GUIEngine::GUIEngine [START]" << std::endl;
 	//initialize texture pointers
 	for (unsigned int i = 0; i < TEX_LAYER_MAX; i++) {
 		m_textures[i].texture = NULL;
@@ -211,11 +213,15 @@ GUIEngine::GUIEngine(	irr::IrrlichtDevice* dev,
 		m_script->setMainMenuData(&m_data->script_data);
 		m_data->script_data.errormessage = "";
 
+
+		errorstream << "------------------------------------------------------------------" <<
+									"guiEngine.cpp -> GUIEngine::GUIEngine [CALLING] GUIEngine::loadMainMenuScript" << std::endl;
 		if (!loadMainMenuScript()) {
 			errorstream << "No future without mainmenu" << std::endl;
 			abort();
 		}
-
+		errorstream << "------------------------------------------------------------------" <<
+							"guiEngine.cpp -> GUIEngine::loadMainMenuScript [CALLING] GUIEngine::run" << std::endl;
 		run();
 	} catch (LuaError &e) {
 		errorstream << "MAINMENU ERROR: " << e.what() << std::endl;
@@ -225,11 +231,16 @@ GUIEngine::GUIEngine(	irr::IrrlichtDevice* dev,
 	m_menu->quitMenu();
 	m_menu->drop();
 	m_menu = NULL;
+
+	errorstream << "------------------------------------------------------------------" <<
+							"guiEngine.cpp -> GUIEngine::GUIEngine [RETURN]" << std::endl;
 }
 
 /******************************************************************************/
 bool GUIEngine::loadMainMenuScript()
 {
+	errorstream << "------------------------------------------------------------------" <<
+					"guiEngine.cpp -> GUIEngine::loadMainMenuScript [START]" << std::endl;
 	// Try custom menu script (main_menu_path)
 
 	m_scriptdir = g_settings->get("main_menu_path");
@@ -240,12 +251,16 @@ bool GUIEngine::loadMainMenuScript()
 	std::string script = porting::path_share + DIR_DELIM "builtin" + DIR_DELIM "init.lua";
 	if (m_script->loadScript(script)) {
 		// Menu script loaded
+		errorstream << "------------------------------------------------------------------" <<
+							"guiEngine.cpp -> GUIEngine::loadMainMeanuScript [RETURN]" << std::endl;
 		return true;
 	} else {
 		infostream
 			<< "GUIEngine: execution of menu script in: \""
 			<< m_scriptdir << "\" failed!" << std::endl;
 	}
+	errorstream << "------------------------------------------------------------------" <<
+					"guiEngine.cpp -> GUIEngine::loadMainMenuScript [RETURN]" << std::endl;
 
 	return false;
 }
@@ -253,6 +268,8 @@ bool GUIEngine::loadMainMenuScript()
 /******************************************************************************/
 void GUIEngine::run()
 {
+	errorstream << "------------------------------------------------------------------" <<
+					"guiEngine.cpp -> GUIEngine::run [START]" << std::endl;
 	// Always create clouds because they may or may not be
 	// needed based on the game selected
 	video::IVideoDriver* driver = m_device->getVideoDriver();
@@ -260,7 +277,8 @@ void GUIEngine::run()
 	cloudInit();
 
 	unsigned int text_height = g_fontengine->getTextHeight();
-
+	errorstream << "------------------------------------------------------------------" <<
+						"guiEngine.cpp -> GUIEngine::run [ENTER] main-menu draw loop" << std::endl;
 	while(m_device->run() && (!m_startgame) && (!m_kill))
 	{
 		//check if we need to update the "upper left corner"-text
@@ -297,11 +315,15 @@ void GUIEngine::run()
 		m_menu->getAndroidUIInput();
 #endif
 	}
+	errorstream << "------------------------------------------------------------------" <<
+						"guiEngine.cpp -> GUIEngine::run [RETURN]" << std::endl;
 }
 
 /******************************************************************************/
 GUIEngine::~GUIEngine()
 {
+	errorstream << "------------------------------------------------------------------" <<
+				"guiEngine.cpp -> GUIEngine::~GUIEngine [START]" << std::endl;
 	video::IVideoDriver* driver = m_device->getVideoDriver();
 	FATAL_ERROR_IF(driver == 0, "Could not get video driver");
 
@@ -325,6 +347,9 @@ GUIEngine::~GUIEngine()
 
 	if (m_cloud.clouds)
 		m_cloud.clouds->drop();
+
+	errorstream << "------------------------------------------------------------------" <<
+					"guiEngine.cpp -> GUIEngine::~GUIEngine [RETURN]" << std::endl;
 }
 
 /******************************************************************************/
