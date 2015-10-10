@@ -155,6 +155,9 @@ int main(int argc, char *argv[])
 
 	log_register_thread("Main");
 
+	errorstream << "------------------------------------------------------------------" <<
+			"main.cpp -> main [START]" << std::endl;
+
 	Settings cmd_args;
 	bool cmd_args_ok = get_cmdline_opts(argc, argv, &cmd_args);
 	if (!cmd_args_ok
@@ -228,12 +231,18 @@ int main(int argc, char *argv[])
 	g_settings->set("server_dedicated",
 			game_params.is_dedicated_server ? "true" : "false");
 
-	if (game_params.is_dedicated_server)
+	if (game_params.is_dedicated_server){
+		errorstream << "------------------------------------------------------------------" <<
+				"main.cpp -> main [CALLING] run_dedicated_server" << std::endl;
 		return run_dedicated_server(game_params, cmd_args) ? 0 : 1;
+	}
 
 #ifndef SERVER
+	errorstream << "------------------------------------------------------------------" <<
+			"main.cpp -> main [CALLING] ClientLauncher launcher.run" << std::endl;
 	ClientLauncher launcher;
 	retval = launcher.run(game_params, cmd_args) ? 0 : 1;
+
 #else
 	retval = 0;
 #endif
@@ -248,6 +257,9 @@ int main(int argc, char *argv[])
 	httpfetch_cleanup();
 
 	END_DEBUG_EXCEPTION_HANDLER(errorstream)
+
+	errorstream << "------------------------------------------------------------------" <<
+			"main.cpp -> main [RETURN]" << std::endl;
 
 	return retval;
 }
