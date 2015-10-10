@@ -95,6 +95,7 @@ private:
 	v3s16 m_old_node_below;
 	std::string m_old_node_below_type;
 	bool m_can_jump;
+	bool in_jump;
 
 	GenericCAO* m_cao;
 };
