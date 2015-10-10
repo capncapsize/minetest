@@ -28,6 +28,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "map.h"
 #include "util/numeric.h"
 
+#include <stdio.h>
+
 /*
 	LocalPlayer
 */
@@ -80,6 +82,13 @@ void LocalPlayer::move(f32 dtime, Environment *env, f32 pos_max_d,
 		setPosition(overridePosition);
 		m_sneak_node_exists = false;
 		return;
+	}
+
+	if(control.jump){
+		in_jump = true;
+	}
+	if(in_jump){
+		control.sneak = false;
 	}
 
 	// Skip collision detection if noclip mode is used
@@ -182,7 +191,7 @@ void LocalPlayer::move(f32 dtime, Environment *env, f32 pos_max_d,
 	*/
 	if (control.sneak && m_sneak_node_exists &&
 			!(fly_allowed && g_settings->getBool("free_move")) && !in_liquid &&
-			physics_override_sneak) {
+			physics_override_sneak && !control.jump && !in_jump) {
 		f32 maxd = 0.5 * BS + sneak_max;
 		v3f lwn_f = intToFloat(m_sneak_node, BS);
 		position.X = rangelim(position.X, lwn_f.X-maxd, lwn_f.X+maxd);
@@ -249,7 +258,7 @@ void LocalPlayer::move(f32 dtime, Environment *env, f32 pos_max_d,
 		m_need_to_get_new_sneak_node = true;
 	}
 
-	if (m_need_to_get_new_sneak_node && physics_override_sneak) {
+	if (m_need_to_get_new_sneak_node && physics_override_sneak && !control.jump) {
 		m_sneak_node_bb_ymax = 0;
 		v3s16 pos_i_bottom = floatToInt(position - v3f(0, position_y_mod, 0), BS);
 		v2f player_p2df(position.X, position.Z);
@@ -350,7 +359,10 @@ void LocalPlayer::move(f32 dtime, Environment *env, f32 pos_max_d,
 
 		// Set camera impact value to be used for view bobbing
 		camera_impact = getSpeed().Y * -1;
+		in_jump = false;
 	}
+
+	//printf("Player In air after jump: %i\n", touching_ground);
 
 	{
 		camera_barely_in_ceiling = false;
