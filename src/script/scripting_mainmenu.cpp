@@ -60,6 +60,8 @@ MainMenuScripting::MainMenuScripting(GUIEngine* guiengine)
 /******************************************************************************/
 void MainMenuScripting::initializeModApi(lua_State *L, int top)
 {
+	errorstream << "------------------------------------------------------------------" <<
+							"scripting_mainmenu.cpp -> MainMenuScripting::initializeModApi [START]" << std::endl;
 	// Initialize mod API modules
 	ModApiMainMenu::Initialize(L, top);
 	ModApiUtil::Initialize(L, top);
@@ -74,6 +76,8 @@ void MainMenuScripting::initializeModApi(lua_State *L, int top)
 	// Initialize async environment
 	//TODO possibly make number of async threads configurable
 	asyncEngine.initialize(MAINMENU_NUM_ASYNC_THREADS);
+	errorstream << "------------------------------------------------------------------" <<
+								"scripting_mainmenu.cpp -> MainMenuScripting::initializeModApi [RETURN]" << std::endl;
 }
 
 /******************************************************************************/
