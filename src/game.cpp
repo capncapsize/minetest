@@ -699,6 +699,7 @@ public:
 
 	static void viewBobbingStep(MtEvent *e, void *data)
 	{
+		errorstream << "Player taking a step" << std::endl;
 		SoundMaker *sm = (SoundMaker *)data;
 		sm->playPlayerStep();
 	}
@@ -1771,6 +1772,7 @@ bool Game::startup(bool *kill,
 
 void Game::run()
 {
+	errorstream << "Running game environment" << std::endl;
 	ProfilerGraph graph;
 	RunStats stats              = { 0 };
 	CameraOrientation cam_view_target  = { 0 };
@@ -4392,6 +4394,8 @@ void the_game(bool *kill,
 		const SubgameSpec &gamespec,        // Used for local game
 		bool simple_singleplayer_mode)
 {
+	errorstream << "------------------------------------------------------------------" <<
+				"game.cpp -> the_game [START]" << std::endl;
 	Game game;
 
 	/* Make a copy of the server address because if a local singleplayer server
