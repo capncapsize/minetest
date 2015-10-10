@@ -88,6 +88,8 @@ bool AsyncEngine::registerFunction(const char* name, lua_CFunction func)
 /******************************************************************************/
 void AsyncEngine::initialize(unsigned int numEngines)
 {
+	errorstream << "------------------------------------------------------------------" <<
+						"s_async.cpp -> AsyncEngine::initialize [START]" << std::endl;
 	initDone = true;
 
 	for (unsigned int i = 0; i < numEngines; i++) {
@@ -96,6 +98,8 @@ void AsyncEngine::initialize(unsigned int numEngines)
 		workerThreads.push_back(toAdd);
 		toAdd->start();
 	}
+	errorstream << "------------------------------------------------------------------" <<
+							"s_async.cpp -> AsyncEngine::initialize [RETRUN]" << std::endl;
 }
 
 /******************************************************************************/
